@@ -1,0 +1,185 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+//tables
+
+//authentication
+model Roles {
+  id     Int     @id @default(autoincrement())
+  name   String  @unique
+  status Boolean @default(true)
+  users  Users[]
+}
+
+model Users {
+  id        Int         @id @default(autoincrement())
+  name      String
+  surname   String
+  telephone String?
+  email     String      @unique
+  password  String
+  image     String?
+  token     String?     @default(uuid())
+  isConfirm Boolean     @default(false)
+  status    Boolean     @default(true)
+  roleId    Int         @map("roleId")
+  roles     Roles       @relation(fields: [roleId], references: [id])
+  purchases Purchases[]
+  sales     Sales[]
+}
+
+//Business Data
+model BusinessData {
+  id          Int     @id @default(autoincrement())
+  ruc         String  @unique
+  name        String
+  description String
+  direction   String
+  telephone   String
+  email       String? @unique
+  image       String?
+}
+
+//catalogs
+model Categories {
+  id          Int        @id @default(autoincrement())
+  name        String     @unique
+  description String?
+  status      Boolean    @default(true)
+  products    Products[]
+}
+
+model Suppliers {
+  id        Int         @id @default(autoincrement())
+  ruc       String      @unique
+  name      String      @unique
+  direction String?
+  telephone String?
+  email     String?     @unique
+  status    Boolean     @default(true)
+  purchases Purchases[]
+}
+
+model PaymentMethods {
+  id     Int     @id @default(autoincrement())
+  name   String  @unique
+  status Boolean @default(true)
+  sales  Sales[]
+}
+
+//inventories
+model Products {
+  id   Int    @id @default(autoincrement())
+  code String @unique
+  name String
+
+  categoriesId    Int
+  categories      Categories        @relation(fields: [categoriesId], references: [id])
+  status          Boolean           @default(true)
+  detailsProducts DetailsProducts[]
+}
+
+model DetailsProducts {
+  id             Int              @id @default(autoincrement())
+  productsId     Int
+  description    String?
+  image          String?
+  products       Products         @relation(fields: [productsId], references: [id])
+  storedProducts StoredProducts[]
+}
+
+model StoredProducts {
+  id                Int                @id @default(autoincrement())
+  detailsProductsId Int
+  stock             Int
+  purchasePrice     Float
+  salePrice         Float
+  status            Boolean            @default(true)
+  created_at        DateTime           @default(now())
+  updated_at        DateTime           @updatedAt
+  detailsProducts   DetailsProducts    @relation(fields: [detailsProductsId], references: [id])
+  detailsSales      DetailsSales[]
+  detailsPurchases  DetailsPurchases[]
+}
+
+//iva
+model Iva {
+  id        Int         @id @default(autoincrement())
+  name      String
+  rate      Float
+  status    Boolean     @default(true)
+  purchases Purchases[]
+  sales     Sales[]
+}
+
+//purchases
+model Purchases {
+  id               Int                @id @default(autoincrement())
+  usersId          Int
+  suppliersId      Int
+  ivaId            Int
+  invoiceNumber    String
+  document         String?
+  date             DateTime           @default(now())
+  subtotal         Float
+  discount         Float?
+  total            Float
+  status           Boolean            @default(true)
+  users            Users              @relation(fields: [usersId], references: [id])
+  suppliers        Suppliers          @relation(fields: [suppliersId], references: [id])
+  iva              Iva                @relation(fields: [ivaId], references: [id])
+  detailsPurchases DetailsPurchases[]
+}
+
+model DetailsPurchases {
+  id               Int            @id @default(autoincrement())
+  purchasesId      Int
+  storedProductsId Int
+  amount           Int
+  purchasePrice    Float
+  salePrice        Float
+  discount         Float?
+  subTotal         Float
+  purchases        Purchases      @relation(fields: [purchasesId], references: [id])
+  storedProducts   StoredProducts @relation(fields: [storedProductsId], references: [id])
+}
+
+//sales
+model Sales {
+  id                   Int            @id @default(autoincrement())
+  usersId              Int
+  paymentMethodId      Int
+  ivaId                Int
+  transactionReference String?
+  ruc                  String
+  cancellationReason   String?
+  annulledAt           DateTime?
+  invoiceNumber        Int            @unique
+  date                 DateTime       @default(now())
+  subTotal             Float
+  discount             Float
+  total                Float
+  status               Boolean        @default(true)
+  users                Users          @relation(fields: [usersId], references: [id])
+  paymentMethods       PaymentMethods @relation(fields: [paymentMethodId], references: [id])
+  iva                  Iva            @relation(fields: [ivaId], references: [id])
+  detailsSales         DetailsSales[]
+}
+
+model DetailsSales {
+  id               Int            @id @default(autoincrement())
+  salesId          Int
+  storedProductsId Int
+  price            Float
+  amount           Int
+  subTotal         Float
+  discount         Float
+  storedProducts   StoredProducts @relation(fields: [storedProductsId], references: [id])
+  sales            Sales          @relation(fields: [salesId], references: [id])
+}
