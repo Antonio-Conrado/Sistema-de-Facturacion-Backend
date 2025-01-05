@@ -25,7 +25,7 @@ model Users {
   email     String      @unique
   password  String
   image     String?
-  token     String?     @unique 
+  token     String?     @unique
   isConfirm Boolean     @default(false)
   status    Boolean     @default(true)
   roleId    Int         @map("roleId")
@@ -75,10 +75,9 @@ model PaymentMethods {
 
 //inventories
 model Products {
-  id   Int    @id @default(autoincrement())
-  code String @unique
-  name String
-
+  id              Int               @id @default(autoincrement())
+  code            String            @unique
+  name            String
   categoriesId    Int
   categories      Categories        @relation(fields: [categoriesId], references: [id])
   status          Boolean           @default(true)
@@ -111,8 +110,7 @@ model StoredProducts {
 //iva
 model Iva {
   id        Int         @id @default(autoincrement())
-  name      String
-  rate      Float
+  rate      Float       @unique
   status    Boolean     @default(true)
   purchases Purchases[]
   sales     Sales[]
@@ -163,7 +161,7 @@ model Sales {
   invoiceNumber        Int            @unique
   date                 DateTime       @default(now())
   subTotal             Float
-  discount             Float
+  discount             Float?
   total                Float
   status               Boolean        @default(true)
   users                Users          @relation(fields: [usersId], references: [id])
@@ -179,7 +177,7 @@ model DetailsSales {
   price            Float
   amount           Int
   subTotal         Float
-  discount         Float
+  discount         Float?
   storedProducts   StoredProducts @relation(fields: [storedProductsId], references: [id])
   sales            Sales          @relation(fields: [salesId], references: [id])
 }
