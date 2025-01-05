@@ -12,4 +12,4 @@ export type User = {
     status: boolean;
 }
 
-export type UserData = Pick<User, 'id' | 'email' | 'roleId'>
+export type UserData = Pick<User, 'id' | 'email' | 'status' | 'roleId'>
