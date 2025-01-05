@@ -58,8 +58,8 @@ export class AuthController {
     static login = async (req: Request, res: Response) => {
         try {
             const user = await prisma.users.findUnique({ where: { email: req.body.email } });
-            if (!user) {
-                res.status(404).json({ error: "El usuario no existe" })
+            if (!user || user.status === false) {
+                res.status(404).json({ error: "El usuario no existe o está dado de baja" })
                 return
             }
 
