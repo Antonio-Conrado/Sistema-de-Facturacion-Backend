@@ -5,6 +5,7 @@ import { ErrorsValidation } from "../middlewares/ErrorsValidation";
 import { body } from "express-validator";
 import { validateUserExists, validateUserId, validateUserInputs } from "../middlewares/userValidation";
 import { validateRole } from "../middlewares/validateRole";
+import { uploadImage } from "../middlewares/uploadImage";
 
 const router = Router()
 
@@ -41,8 +42,7 @@ router.patch('/suspended-user/:userId',
 )
 
 router.post('/upload-image/:userId',
-    body('image')
-        .notEmpty().withMessage('La imagen es obligatoria'),
+    uploadImage,
     UserController.uploadImageUser
 )
 

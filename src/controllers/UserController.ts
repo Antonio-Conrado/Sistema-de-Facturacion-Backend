@@ -100,35 +100,12 @@ export class UserController {
 
     static uploadImageUser = async (req: Request, res: Response) => {
         const id = parseInt(req.params.userId, 10)
-        const form = formidable({ multiples: false })
         try {
-            form.parse(req, (error, fields, files) => {
-                const supporteFormats = ["jpg", "jpeg", "webp", "png", "avif"]
-                const fileType = files.image[0].mimetype.split('/')[1]//get format image
-
-                if (!supporteFormats.includes(fileType)) {
-                    res.status(400).json({ error: 'Formato de imagen no válido. Asegurese que sea las siguientes extensiones: jpg, jpeg, webp, png, avif' })
-                    return
-                }
-                if (files.image[0].size > 1048576) {
-                    res.status(400).json({ error: 'Ha superado el límite de tamaño. Máximo: 1 mega' })
-                    return
-                }
-
-                cloudinary.uploader.upload(files.image[0].filepath, { public_id: uuid() }, async function (error, result) {
-                    if (error) {
-                        res.status(500).json({ error: 'Hubo un error al subir la imagen' })
-                        return
-                    }
-                    if (result) {
-                        await prisma.users.update({
-                            where: { id },
-                            data: { image: result.secure_url }
-                        })
-                        res.status(200).json({ image: result.secure_url })
-                    }
-                })
+            const user = await prisma.users.update({
+                where: { id },
+                data: { image: req.image }
             })
+            res.status(200).json({ image : user.image})
         } catch (error) {
             res.status(500).json({ error: 'Hubo un error' })
         }
