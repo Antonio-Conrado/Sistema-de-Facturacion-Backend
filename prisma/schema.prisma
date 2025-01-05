@@ -25,7 +25,7 @@ model Users {
   email     String      @unique
   password  String
   image     String?
-  token     String?     @default(uuid())
+  token     String?     @unique 
   isConfirm Boolean     @default(false)
   status    Boolean     @default(true)
   roleId    Int         @map("roleId")
