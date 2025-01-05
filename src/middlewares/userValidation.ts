@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { prisma } from "../config/db";
-import { param, validationResult } from "express-validator";
+import { body, param, validationResult } from "express-validator";
 import { UserData } from "../types";
 
 declare global {
@@ -38,3 +38,18 @@ export const validateUserId = async (req: Request, res: Response, next: NextFunc
     next();
 }
 
+export const validateUserInputs = async (req: Request, res: Response, next: NextFunction) => {
+    await body('name')
+        .notEmpty().withMessage('El nombre es obligatorio').run(req)
+    await body('surname')
+        .notEmpty().withMessage('El apellido es obligatorio').run(req)
+    await body('email')
+        .isEmail().withMessage('El email no es válido').run(req)
+    await body('password')
+        .notEmpty().withMessage('El password es obligatorio')
+        .isLength({ min: 6 }).withMessage('El password debe tener mínimo 6 carácteres').run(req)
+    await body('roleId')
+        .notEmpty().withMessage('El rol es obligatorio').run(req)
+
+    next()
+}
