@@ -41,7 +41,6 @@ router.patch('/suspended-user/:userId',
 )
 
 router.post('/upload-image/:userId',
-    validateRole('admin'),
     body('image')
         .notEmpty().withMessage('La imagen es obligatoria'),
     UserController.uploadImageUser
