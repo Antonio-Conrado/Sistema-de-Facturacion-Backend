@@ -35,6 +35,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
                 select: {
                     id: true,
                     email: true,
+                    status: true,
                     roleId: true
                 }
             })
