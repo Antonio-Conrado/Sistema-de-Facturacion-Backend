@@ -31,7 +31,7 @@ export class AuthController {
                 token: user.token
             })
 
-            res.status(200).json({ msg: 'Usuario creado con éxito' })
+            res.status(200).json({ msg: 'Revisa tu correo para confirmar tu cuenta' })
         } catch (error) {
             res.status(500).json({ error: 'Hubo un error' })
         }
@@ -46,7 +46,7 @@ export class AuthController {
                 return
             }
             user.isConfirm = true
-            user.token = ''
+            user.token = null
             await prisma.users.update({ where: { token }, data: user })
             res.send('Usuario confimado correctamente')
         } catch (error) {
@@ -122,8 +122,9 @@ export class AuthController {
     }
 
     static resetPasswordByToken = async (req: Request, res: Response) => {
+        const { token } = req.body
         try {
-            const user = await prisma.users.findUnique({ where: { email: req.body.email } });
+            const user = await prisma.users.findUnique({ where: { token } });
             if (!user) {
                 res.status(404).json({ error: "El usuario no existe" })
                 return
@@ -132,7 +133,7 @@ export class AuthController {
             const newPassword = await hashPassword(req.body.password)
             await prisma.users.update({
                 where: { id: user.id },
-                data: { password: newPassword }
+                data: { password: newPassword, token: null }
             })
             res.status(200).json({ msg: 'Password actualizado correctamente' })
         } catch (error) {
