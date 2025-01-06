@@ -3,8 +3,11 @@ import { body, param } from "express-validator";
 import { ErrorsValidation } from "../middlewares/ErrorsValidation";
 import { AuthController } from "../controllers/AuthController";
 import { authenticate } from "../middlewares/authenticate";
+import { limiterRequest } from "../config/limiterRequest";
 
 const router = Router()
+
+router.use(limiterRequest)
 
 router.post('/create-account',
     body('name')
