@@ -29,7 +29,7 @@ export class AuthEmail {
             html: `
                 <p>Hola: ${user.name}, has solicitado restablecer tu cuenta</p>
                 <p>Haz click en el siguiente enlace para restablecer tu passwor </p>
-                <a href='${process.env.FRONTEND_URL}/resetear-password/${user.token}'>Restablecer password</a>
+                <a href='${process.env.FRONTEND_URL}/resetear-password'>Restablecer password</a>
                 <p>Ingresa el codigo: <b>${user.token}</b></p>
             `
         })
