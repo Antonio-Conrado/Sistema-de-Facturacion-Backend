@@ -31,7 +31,7 @@ export class AuthController {
                 token: user.token
             })
 
-            res.status(200).json({ msg: 'Revisa tu correo para confirmar tu cuenta' })
+            res.status(201).json({ msg: 'Revisa tu correo para confirmar tu cuenta' })
         } catch (error) {
             res.status(500).json({ error: 'Hubo un error' })
         }
@@ -60,6 +60,10 @@ export class AuthController {
             const user = await prisma.users.findUnique({ where: { email: req.body.email } });
             if (!user || user.status === false) {
                 res.status(404).json({ error: "El usuario no existe o está dado de baja" })
+                return
+            }
+            if (user.isConfirm === false) {
+                res.status(404).json({ error: "El usuario no ha sído confirmado" })
                 return
             }
 
