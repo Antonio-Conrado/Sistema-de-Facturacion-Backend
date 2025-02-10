@@ -54,7 +54,7 @@ export class BusinessDataController {
                 where: { id: businessData.id },
                 data: { image: req.image },
             });
-            res.status(200).json({ image: data.image });
+            res.status(200).json({ msg: 'Imagen súbida correctamente' });
         } catch (error) {
             res.status(500).json({ error: 'Hubo un error' });
         }

@@ -17,7 +17,7 @@ router.get(
 );
 
 router.put(
-    '',
+    '/',
     validateRole(['administrador']),
     body('ruc').notEmpty().withMessage('El ruc del negocio es obligatorio'),
     body('name').notEmpty().withMessage('El nombre del negocio es obligatorio'),
