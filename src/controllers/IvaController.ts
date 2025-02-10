@@ -13,7 +13,7 @@ export class IvaController {
                 return
             }
             await prisma.iva.create({ data: req.body })
-            res.status(200).json({ msg: 'Iva creado con éxito' })
+            res.status(200).json('Iva creado con éxito' )
         } catch (error) {
             res.status(500).json({ error: 'Hubo un error' });
         }
@@ -64,7 +64,7 @@ export class IvaController {
                 where: { id },
                 data: { rate: parseFloat(rate) },
             });
-            res.status(200).json({ msg: 'IVA actualizado exitosamente' })
+            res.status(200).json('IVA actualizado exitosamente')
         } catch (error) {
             res.status(500).json({ error: 'Hubo un error' });
         }
@@ -84,7 +84,7 @@ export class IvaController {
                 where: { id },
                 data: { status: !iva.status }
             });
-            res.status(200).json({ msg: 'IVA actualizado exitosamente' })
+            res.status(200).json('IVA actualizado exitosamente')
         } catch (error) {
             res.status(500).json({ error: 'Hubo un error' });
         }

@@ -19,7 +19,7 @@ export class SupplierController {
             }
 
             await prisma.suppliers.create({ data: req.body })
-            res.status(200).json({ msg: 'Proveedor creado con éxito' })
+            res.status(200).json('Proveedor creado con éxito')
         } catch (error) {
             res.status(500).json({ error: 'Hubo un error' })
         }
@@ -69,7 +69,7 @@ export class SupplierController {
                 where: { id },
                 data: req.body
             })
-            res.status(200).json({ msg: 'Proveedor actualizado éxitosamente' })
+            res.status(200).json( 'Proveedor actualizado éxitosamente')
         } catch (error) {
             res.status(500).json({ error: 'Hubo un error' })
         }
@@ -88,7 +88,7 @@ export class SupplierController {
                 data: { status: !supplier.status }
             })
 
-            res.status(200).json({ msg: 'Proveedor actualizado éxitosamente' })
+            res.status(200).json('Proveedor actualizado éxitosamente')
         } catch (error) {
             res.status(500).json({ error: 'Hubo un error' })
         }

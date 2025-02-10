@@ -25,16 +25,12 @@ export class BusinessDataController {
                     where: { id: existingRecord.id },
                     data: req.body,
                 });
-                res.status(200).json({
-                    msg: 'Datos del negocio actualizados exitosamente',
-                });
+                res.status(200).json('Datos del negocio actualizados exitosamente');
             } else {
                 await prisma.businessData.create({
                     data: req.body,
                 });
-                res.status(200).json({
-                    msg: 'Datos del negocio creados exitosamente',
-                });
+                res.status(200).json('Datos del negocio creados exitosamente');
             }
         } catch (error) {
             res.status(500).json({ error: 'Hubo un error' });
@@ -54,7 +50,7 @@ export class BusinessDataController {
                 where: { id: businessData.id },
                 data: { image: req.image },
             });
-            res.status(200).json({ msg: 'Imagen súbida correctamente' });
+            res.status(200).json('Imagen súbida correctamente')
         } catch (error) {
             res.status(500).json({ error: 'Hubo un error' });
         }

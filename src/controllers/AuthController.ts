@@ -31,7 +31,7 @@ export class AuthController {
                 token: user.token
             })
 
-            res.status(201).json({ msg: 'Revisa tu correo para confirmar tu cuenta' })
+            res.status(201).json('Revisa tu correo para confirmar tu cuenta')
         } catch (error) {
             res.status(500).json({ error: 'Hubo un error' })
         }
@@ -139,7 +139,7 @@ export class AuthController {
                 where: { id: user.id },
                 data: { password: newPassword, token: null }
             })
-            res.status(200).json({ msg: 'Password actualizado correctamente' })
+            res.status(200).json('Password actualizado correctamente')
         } catch (error) {
             res.status(500).json({ error: 'Hubo un error' })
         }

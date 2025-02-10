@@ -22,7 +22,7 @@ export class UserController {
             user.isConfirm = true;
             await prisma.users.create({ data: user });
 
-            res.status(200).json({ msg: 'Usuario creado con éxito' });
+            res.status(200).json('Usuario creado con éxito');
         } catch (error) {
             res.status(500).json({ error: 'Hubo un error' });
         }
@@ -93,7 +93,7 @@ export class UserController {
                 where: { id },
                 data: req.body,
             });
-            res.status(200).json({ msg: 'Usuario actualizado éxitosamente' });
+            res.status(200).json('Usuario actualizado éxitosamente');
         } catch (error) {
             console.log(error);
             res.status(500).json({ error: 'Hubo un error' });
@@ -108,7 +108,7 @@ export class UserController {
                 data: { status: !req.user.status },
             });
 
-            res.status(200).json({ msg: 'Usuario actualizado éxitosamente' });
+            res.status(200).json( 'Usuario actualizado éxitosamente');
         } catch (error) {
             res.status(500).json({ error: 'Hubo un error' });
         }
@@ -121,7 +121,7 @@ export class UserController {
                 where: { id },
                 data: { image: req.image },
             });
-            res.status(200).json({ image: user.image });
+            res.status(200).json('Imagen súbida correctamente');
         } catch (error) {
             res.status(500).json({ error: 'Hubo un error' });
         }

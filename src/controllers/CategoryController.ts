@@ -12,7 +12,7 @@ export class CategoryController {
             }
             await prisma.categories.create({ data: req.body })
 
-            res.status(200).json({ msg: 'Categoría creada con éxito' })
+            res.status(200).json( 'Categoría creada con éxito')
         } catch (error) {
             res.status(500).json({ error: 'Hubo un error' })
         }
@@ -63,7 +63,7 @@ export class CategoryController {
                 where: { id },
                 data: req.body
             })
-            res.status(200).json({ msg: 'Categoría actualizada éxitosamente' })
+            res.status(200).json('Categoría actualizada éxitosamente')
         } catch (error) {
             console.log(error)
             res.status(500).json({ error: 'Hubo un error' })
@@ -84,7 +84,7 @@ export class CategoryController {
                 data: { status: !category.status }
             })
 
-            res.status(200).json({ msg: 'Categoría actualizada éxitosamente' })
+            res.status(200).json('Categoría actualizada éxitosamente')
         } catch (error) {
             res.status(500).json({ error: 'Hubo un error' })
         }
