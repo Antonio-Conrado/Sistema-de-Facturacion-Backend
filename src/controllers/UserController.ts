@@ -88,7 +88,6 @@ export class UserController {
                 return;
             }
 
-            req.body.password = await hashPassword(req.body.password);
             await prisma.users.update({
                 where: { id },
                 data: req.body,
@@ -108,7 +107,7 @@ export class UserController {
                 data: { status: !req.user.status },
             });
 
-            res.status(200).json( 'Usuario actualizado éxitosamente');
+            res.status(200).json('Usuario actualizado éxitosamente');
         } catch (error) {
             res.status(500).json({ error: 'Hubo un error' });
         }
