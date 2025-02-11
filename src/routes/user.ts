@@ -6,6 +6,7 @@ import { body } from 'express-validator';
 import {
     validateUserExists,
     validateUserId,
+    validateUserInputPassword,
     validateUserInputs,
 } from '../middlewares/userValidation';
 import { validateRole } from '../middlewares/validateRole';
@@ -21,6 +22,7 @@ router.post(
     '/create-user',
     validateRole(['administrador']),
     validateUserInputs,
+    validateUserInputPassword,
     ErrorsValidation,
     UserController.createUser,
 );
