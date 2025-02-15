@@ -23,7 +23,7 @@ export const validateUserExists = async (
             res.status(404).json({ error: 'El usuario no existe' });
             return;
         }
-        req.user = user;
+        // req.user = user;
         next();
     } catch (error) {
         res.status(500).json({ error: 'Hubo un error' });
