@@ -5,9 +5,15 @@ import { AuthController } from '../controllers/AuthController';
 import { authenticate } from '../middlewares/authenticate';
 import { limiterRequest } from '../config/limiterRequest';
 import { validateRole } from '../middlewares/validateRole';
+import {
+    validateUserExists,
+    validateUserId,
+} from '../middlewares/userValidation';
 
 const router = Router();
 
+router.param('userId', validateUserId);
+router.param('userId', validateUserExists);
 // router.use(limiterRequest)
 
 router.post(
@@ -65,8 +71,8 @@ router.post(
 
 router.get('/user', authenticate, AuthController.user);
 
-router.get(
-    '/update-password',
+router.put(
+    '/update-password/:userId',
     authenticate,
     validateRole(['administrador', 'empleado']),
     body('password')
@@ -81,8 +87,8 @@ router.get(
     AuthController.updatePassword,
 );
 
-router.get(
-    '/check-password',
+router.post(
+    '/check-password/:userId',
     authenticate,
     validateRole(['administrador', 'empleado']),
     body('password')
@@ -91,5 +97,7 @@ router.get(
     ErrorsValidation,
     AuthController.checkPassword,
 );
+
+router.get('/roles', authenticate, AuthController.getRoles);
 
 export default router;
