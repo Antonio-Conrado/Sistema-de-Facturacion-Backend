@@ -1,7 +1,4 @@
 import { Request, Response } from 'express';
-import cloudinary from '../config/cloudinary';
-import { v4 as uuid } from 'uuid';
-import formidable from 'formidable';
 import { prisma } from '../config/db';
 import { User } from '../types';
 import { hashPassword } from '../utils/auth';
@@ -36,13 +33,18 @@ export class UserController {
                 },
                 select: {
                     id: true,
+                    roleId: true,
                     name: true,
                     surname: true,
                     email: true,
+                    image: true,
+                    telephone: true,
                     roles: {
                         select: { name: true },
                     },
+                    status: true,
                 },
+                orderBy: { id: 'asc' },
             });
             res.status(200).json(users);
         } catch (error) {
@@ -94,7 +96,6 @@ export class UserController {
             });
             res.status(200).json('Usuario actualizado éxitosamente');
         } catch (error) {
-            console.log(error);
             res.status(500).json({ error: 'Hubo un error' });
         }
     };
@@ -102,11 +103,11 @@ export class UserController {
     static suspendUser = async (req: Request, res: Response) => {
         const id = parseInt(req.params.userId, 10);
         try {
+            const user = await prisma.users.findUnique({ where: { id } });
             await prisma.users.update({
                 where: { id },
-                data: { status: !req.user.status },
+                data: { status: !user.status },
             });
-
             res.status(200).json('Usuario actualizado éxitosamente');
         } catch (error) {
             res.status(500).json({ error: 'Hubo un error' });
@@ -116,7 +117,7 @@ export class UserController {
     static uploadImageUser = async (req: Request, res: Response) => {
         const id = parseInt(req.params.userId, 10);
         try {
-            const user = await prisma.users.update({
+            await prisma.users.update({
                 where: { id },
                 data: { image: req.image },
             });
