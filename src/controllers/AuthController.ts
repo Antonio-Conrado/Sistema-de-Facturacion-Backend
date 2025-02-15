@@ -79,7 +79,6 @@ export class AuthController {
 
             res.status(200).json(data)
         } catch (error) {
-            console.log(error)
             res.status(500).json({ error: 'Hubo un error' })
         }
     }
@@ -151,14 +150,21 @@ export class AuthController {
 
     static updatePassword = async (req: Request, res: Response) => {
         const { password } = req.body
-        const { id } = req.user
+        const id = parseInt(req.params.userId, 10);
         try {
-            const user = await prisma.users.findUnique({ where: { id } })
-            const isPasswordCorrect = await checkPassword(password, user.password)
-            console.log(user)
+            const user = await prisma.users.findUnique({ where: { id } });
+            if (user.roleId === 1 && req.user.roleId === 2) {
+                const error = new Error('No está autorizado para realizar esta acción');
+                res.status(401).json({ error: error.message });
+                return;
+            }
+            const isPasswordCorrect = await checkPassword(
+                password,
+                user.password,
+            );
             if (!isPasswordCorrect) {
                 const error = new Error('El password actual es incorrecto')
-                res.status(401).json({ error: error.message })
+                res.status(409).json({ error: error.message })
                 return
             }
 
@@ -181,10 +187,24 @@ export class AuthController {
             const isPasswordCorrect = await checkPassword(password, user.password)
             if (!isPasswordCorrect) {
                 const error = new Error('El password actual es incorrecto')
-                res.status(401).json({ error: error.message })
+                res.status(409).json({ error: error.message })
                 return
             }
             res.status(200).send('El password es correcto')
+        } catch (error) {
+            res.status(500).json({ error: 'Hubo un error' })
+        }
+    }
+    
+    static getRoles = async (req: Request, res: Response) => {
+        try {
+            const roles = await prisma.roles.findMany()
+            if(!roles){
+                const error = new Error('No hay roles disponibles')
+                res.status(404).json({ error: error.message })
+                return
+            }
+            res.status(200).send(roles)
         } catch (error) {
             res.status(500).json({ error: 'Hubo un error' })
         }
