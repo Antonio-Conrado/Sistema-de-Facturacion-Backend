@@ -20,11 +20,7 @@ export class CategoryController {
 
     static getAllCategories = async (req: Request, res: Response) => {
         try {
-            const categories = await prisma.categories.findMany({
-                where: {
-                    status: true
-                }
-            })
+            const categories = await prisma.categories.findMany({orderBy:{id:'asc'}})
             res.status(200).json(categories)
         } catch (error) {
             res.status(500).json({ error: 'Hubo un error' })

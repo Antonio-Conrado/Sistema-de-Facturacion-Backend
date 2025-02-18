@@ -27,9 +27,7 @@ export class SupplierController {
 
     static getAllSuppliers = async (req: Request, res: Response) => {
         try {
-            const suppliers = await prisma.suppliers.findMany({
-                where: { status: true }
-            })
+            const suppliers = await prisma.suppliers.findMany({orderBy:{id:'asc'}})
             res.status(200).json(suppliers)
         } catch (error) {
             res.status(500).json({ error: 'Hubo un error' })

@@ -21,11 +21,7 @@ export class IvaController {
 
     static getAllIva = async (req: Request, res: Response) => {
         try {
-            const ivaList = await prisma.iva.findMany({
-                where: {
-                    status: true
-                }
-            })
+            const ivaList = await prisma.iva.findMany({orderBy:{id:'asc'}})
             res.status(200).json({ data: ivaList });
         } catch (error) {
             res.status(500).json({ error: 'Hubo un error' });
