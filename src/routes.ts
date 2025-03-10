@@ -6,6 +6,7 @@ import supplier from './routes/supplier';
 import product from './routes/product';
 import businessData from './routes/businessData';
 import iva from './routes/iva';
+import paymentMethod from './routes/paymentMethod';
 
 const routes = (app: Express) => {
     app.use('/api/v1/auth', auth);
@@ -15,5 +16,6 @@ const routes = (app: Express) => {
     app.use('/api/v1/products', product);
     app.use('/api/v1/businessData', businessData);
     app.use('/api/v1/iva', iva);
+    app.use('/api/v1/payment-methods', paymentMethod);
 };
 export default routes;
