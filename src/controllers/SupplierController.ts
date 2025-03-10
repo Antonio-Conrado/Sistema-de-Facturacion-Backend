@@ -47,8 +47,12 @@ export class SupplierController {
     static suspendSupplier = async (req: Request, res: Response) => {
         const { id } = req.params;
         try {
-            await SupplierService.suspendSupplier(+id);
-            res.status(200).json('Proveedor suspendido éxitosamente');
+            const supplier = await SupplierService.suspendSupplier(+id);
+            res.status(200).json(
+                `Proveedor ${
+                    supplier.status ? 'activado' : 'suspendido'
+                } exitosamente`,
+            );
         } catch (error) {
             catchErrors(res, error);
         }

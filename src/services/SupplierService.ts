@@ -65,7 +65,7 @@ export class SupplierService {
 
     static suspendSupplier = async (id: Suppliers['id']) => {
         const supplier = await this.getSupplier(id);
-        await prisma.suppliers.update({
+        return await prisma.suppliers.update({
             where: { id },
             data: { status: !supplier.status },
         });

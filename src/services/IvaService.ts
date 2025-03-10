@@ -50,7 +50,7 @@ export class IvaService {
 
     static suspendIva = async (id: Iva['id']) => {
         const iva = await this.getIva(id);
-        await prisma.iva.update({
+        return await prisma.iva.update({
             where: { id },
             data: { status: !iva.status },
         });

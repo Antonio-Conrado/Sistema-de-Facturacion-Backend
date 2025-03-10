@@ -53,7 +53,7 @@ export class CategoryService {
 
     static suspendCategory = async (id: Categories['id']) => {
         const category = await this.getCategory(id);
-        await prisma.categories.update({
+        return await prisma.categories.update({
             where: { id },
             data: { status: !category.status },
         });

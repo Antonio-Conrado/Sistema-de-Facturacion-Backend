@@ -47,8 +47,10 @@ export class IvaController {
     static suspendIva = async (req: Request, res: Response) => {
         const { id } = req.params;
         try {
-            await IvaService.suspendIva(+id);
-            res.status(200).json('IVA actualizado exitosamente');
+            const iva = await IvaService.suspendIva(+id);
+            res.status(200).json(
+                `Iva ${iva.status ? 'activado' : 'suspendido'} exitosamente`,
+            );
         } catch (error) {
             catchErrors(res, error);
         }
