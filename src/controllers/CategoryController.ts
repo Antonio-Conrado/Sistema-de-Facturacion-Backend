@@ -1,89 +1,56 @@
-import { Request, Response } from 'express'
-import { prisma } from '../config/db'
+import { Request, Response } from 'express';
+import { catchErrors } from '../config/HttpError';
+import { Categories } from '@prisma/client';
+import { CategoryService } from '../services/CategoryService';
 
 export class CategoryController {
     static createCategory = async (req: Request, res: Response) => {
-        const { name } = req.body
+        const category: Categories = req.body;
         try {
-            const categoryExists = await prisma.categories.findUnique({ where: { name } });
-            if (categoryExists) {
-                res.status(409).json({ error: "La categoria ya existe" })
-                return
-            }
-            await prisma.categories.create({ data: req.body })
-
-            res.status(200).json( 'Categoría creada con éxito')
+            await CategoryService.createCategory(category);
+            res.status(200).json('Categoría creada con éxito');
         } catch (error) {
-            res.status(500).json({ error: 'Hubo un error' })
+            catchErrors(res, error);
         }
-    }
+    };
 
     static getAllCategories = async (req: Request, res: Response) => {
         try {
-            const categories = await prisma.categories.findMany({orderBy:{id:'asc'}})
-            res.status(200).json(categories)
+            const categories = await CategoryService.getAllCategories();
+            res.status(200).json(categories);
         } catch (error) {
-            res.status(500).json({ error: 'Hubo un error' })
+            catchErrors(res, error);
         }
-    }
+    };
 
     static getCategory = async (req: Request, res: Response) => {
-        const id = parseInt(req.params.categoryId, 10)
+        const { id } = req.params;
         try {
-            const category = await prisma.categories.findUnique({ where: { id } });
-            if (!category) {
-                res.status(404).json({ error: 'La categoría no existe' })
-                return
-            }
-            res.status(200).json(category)
+            const category = await CategoryService.getCategory(+id);
+            res.status(200).json(category);
         } catch (error) {
-            res.status(500).json({ error: 'Hubo un error' })
+            catchErrors(res, error);
         }
-    }
+    };
 
     static updateCategory = async (req: Request, res: Response) => {
-        const id = parseInt(req.params.categoryId, 10)
+        const { id } = req.params;
+        const category: Categories = req.body;
         try {
-            const categoryExists = await prisma.categories.findUnique({
-                where: {
-                    name: req.body.name,
-                    NOT: { id }
-                }
-            });
-            if (categoryExists) {
-                res.status(409).json({ error: 'Categoría no disponible' });
-                return;
-            }
-
-            await prisma.categories.update({
-                where: { id },
-                data: req.body
-            })
-            res.status(200).json('Categoría actualizada éxitosamente')
+            await CategoryService.updateCategory(+id, category);
+            res.status(200).json('Categoría actualizada éxitosamente');
         } catch (error) {
-            console.log(error)
-            res.status(500).json({ error: 'Hubo un error' })
+            catchErrors(res, error);
         }
-    }
+    };
 
-    static suspendedCategory = async (req: Request, res: Response) => {
-        const id = parseInt(req.params.categoryId, 10)
-        console.log(id)
+    static suspendCategory = async (req: Request, res: Response) => {
+        const { id } = req.params;
         try {
-            const category = await prisma.categories.findUnique({ where: { id } })
-            if (!category) {
-                res.status(404).json({ error: 'La categoría no existe' })
-                return
-            }
-            await prisma.categories.update({
-                where: { id },
-                data: { status: !category.status }
-            })
-
-            res.status(200).json('Categoría actualizada éxitosamente')
+            await CategoryService.suspendCategory(+id);
+            res.status(200).json('Categoría actualizada éxitosamente');
         } catch (error) {
-            res.status(500).json({ error: 'Hubo un error' })
+            catchErrors(res, error);
         }
-    }
-
+    };
 }

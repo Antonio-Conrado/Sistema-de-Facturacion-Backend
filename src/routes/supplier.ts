@@ -16,6 +16,10 @@ router.post(
     body('name')
         .notEmpty()
         .withMessage('El nombre del proveedor es obligatorio'),
+    body('email')
+        .optional()
+        .isEmail()
+        .withMessage('El email del proveedor no es válido'),
     ErrorsValidation,
     SupplierController.createSupplier,
 );
@@ -27,9 +31,9 @@ router.get(
 );
 
 router.get(
-    '/:supplierId',
+    '/:id',
     validateRole(['administrador', 'empleado']),
-    param('supplierId')
+    param('id')
         .custom((value) => value > 0)
         .withMessage('El id de la categoría no es válido'),
     ErrorsValidation,
@@ -37,27 +41,31 @@ router.get(
 );
 
 router.put(
-    '/:supplierId',
+    '/:id',
     validateRole(['administrador']),
-    param('supplierId')
+    param('id')
         .custom((value) => value > 0)
         .withMessage('El id del proveedor no es válido'),
     body('ruc').notEmpty().withMessage('El ruc del proveedor es obligatorio'),
     body('name')
         .notEmpty()
         .withMessage('El nombre del proveedor es obligatorio'),
+    body('email')
+        .optional()
+        .isEmail()
+        .withMessage('El email del proveedor no es válido'),
     ErrorsValidation,
     SupplierController.updateSupplier,
 );
 
 router.patch(
-    '/:supplierId',
+    '/:id',
     validateRole(['administrador']),
-    param('supplierId')
+    param('id')
         .custom((value) => value > 0)
         .withMessage('El id del proveedor no es válido'),
     ErrorsValidation,
-    SupplierController.suspendedSupplier,
+    SupplierController.suspendSupplier,
 );
 
 export default router;

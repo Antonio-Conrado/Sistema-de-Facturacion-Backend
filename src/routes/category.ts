@@ -26,9 +26,9 @@ router.get(
 );
 
 router.get(
-    '/:categoryId',
+    '/:id',
     validateRole(['administrador', 'empleado']),
-    param('categoryId')
+    param('id')
         .custom((value) => value > 0)
         .withMessage('El id de la categoría no es válido'),
     ErrorsValidation,
@@ -36,9 +36,9 @@ router.get(
 );
 
 router.put(
-    '/:categoryId',
+    '/:id',
     validateRole(['administrador', 'empleado']),
-    param('categoryId')
+    param('id')
         .custom((value) => value > 0)
         .withMessage('El id de la categoría no es válido'),
     body('name')
@@ -49,13 +49,13 @@ router.put(
 );
 
 router.patch(
-    '/:categoryId',
+    '/:id',
     validateRole(['administrador', 'empleado']),
-    param('categoryId')
+    param('id')
         .custom((value) => value > 0)
         .withMessage('El id de la categoría no es válido'),
     ErrorsValidation,
-    CategoryController.suspendedCategory,
+    CategoryController.suspendCategory,
 );
 
 export default router;
