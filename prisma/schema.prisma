@@ -110,7 +110,7 @@ model StoredProducts {
 //iva
 model Iva {
   id        Int         @id @default(autoincrement())
-  rate      Float       @unique
+  rate      Int         @unique
   status    Boolean     @default(true)
   purchases Purchases[]
   sales     Sales[]
@@ -122,11 +122,11 @@ model Purchases {
   usersId          Int
   suppliersId      Int
   ivaId            Int
-  invoiceNumber    String
+  invoiceNumber    Int                @unique
   document         String?
   date             DateTime           @default(now())
   subtotal         Float
-  discount         Float?
+  discount         Float              @default(0)
   total            Float
   status           Boolean            @default(true)
   users            Users              @relation(fields: [usersId], references: [id])
@@ -142,8 +142,8 @@ model DetailsPurchases {
   amount           Int
   purchasePrice    Float
   salePrice        Float
-  discount         Float?
-  subTotal         Float
+  discount         Float          @default(0)
+  subtotal         Float
   purchases        Purchases      @relation(fields: [purchasesId], references: [id])
   storedProducts   StoredProducts @relation(fields: [storedProductsId], references: [id])
 }
@@ -160,8 +160,8 @@ model Sales {
   annulledAt           DateTime?
   invoiceNumber        Int            @unique
   date                 DateTime       @default(now())
-  subTotal             Float
-  discount             Float?
+  subtotal             Float
+  discount             Float          @default(0)
   total                Float
   status               Boolean        @default(true)
   users                Users          @relation(fields: [usersId], references: [id])
@@ -176,8 +176,8 @@ model DetailsSales {
   storedProductsId Int
   price            Float
   amount           Int
-  subTotal         Float
-  discount         Float?
+  subtotal         Float
+  discount         Float          @default(0)
   storedProducts   StoredProducts @relation(fields: [storedProductsId], references: [id])
   sales            Sales          @relation(fields: [salesId], references: [id])
 }
