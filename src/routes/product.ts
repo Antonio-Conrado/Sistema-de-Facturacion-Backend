@@ -12,7 +12,7 @@ router.use(authenticate);
 router.get(
     '/',
     validateRole(['administrador', 'empleado']),
-    ProductsController.getProducts,
+    ProductsController.getAllProducts,
 );
 router.get(
     '/:id',
@@ -59,20 +59,20 @@ router.put(
 );
 
 router.post(
-    '/upload-image/:userId',
+    '/upload-image/:id',
     validateRole(['administrador', 'empleado']),
     uploadImage,
     ProductsController.uploadImageProduct,
 );
 
 router.patch(
-    '/:productId',
+    '/:id',
     validateRole(['administrador']),
-    param('productId')
+    param('id')
         .custom((value) => value > 0)
         .withMessage('El id del producto no es válido'),
     ErrorsValidation,
-    ProductsController.suspendedProduct,
+    ProductsController.suspendProduct,
 );
 
 export default router;
