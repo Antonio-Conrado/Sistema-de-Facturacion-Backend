@@ -1,0 +1,51 @@
+import { Request, Response } from 'express';
+import { PurchaseService } from '../services/PurchaseService';
+import { catchErrors } from '../config/HttpError';
+import { Pagination, Purchase } from '../types';
+
+export class PurchaseController {
+    static getAllPurchases = async (req: Request, res: Response) => {
+        const { take, skip }: Pagination = req.query;
+        try {
+            const purchases = await PurchaseService.getAllPurchases(take, skip);
+            res.status(200).json(purchases);
+        } catch (error) {
+            catchErrors(res, error);
+        }
+    };
+
+    static getPurchase = async (req: Request, res: Response) => {
+        const { id } = req.params;
+        try {
+            const purchase = await PurchaseService.getPurchase(+id);
+            res.status(200).json(purchase);
+        } catch (error) {
+            catchErrors(res, error);
+        }
+    };
+
+    static createPurchase = async (req: Request, res: Response) => {
+        const data: Purchase = req.body;
+        const userId = req.user.id;
+        try {
+            const purchase = await PurchaseService.createProduct(data, +userId);
+            res.status(201).json(
+                `La compra con el número de factura: ${purchase.invoiceNumber} se ha registrado exitosamente`,
+            );
+        } catch (error) {
+            catchErrors(res, error);
+        }
+    };
+
+    static suspendPurchase = async (req: Request, res: Response) => {
+        const { id } = req.params;
+        try {
+            const purchase = await PurchaseService.suspendPurchase(+id);
+            res.status(200).json(
+                `La compra con número de factura: ${purchase.invoiceNumber} ha sído anulada exitosamente`,
+            );
+        } catch (error) {
+            catchErrors(res, error);
+        }
+    };
+}
