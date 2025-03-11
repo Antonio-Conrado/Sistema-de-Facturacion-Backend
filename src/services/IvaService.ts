@@ -55,4 +55,12 @@ export class IvaService {
             data: { status: !iva.status },
         });
     };
+
+    static isIvaSuspended = async (id: Iva['id']) => {
+        const supplier = await this.getIva(id);
+        if (supplier.status === false) {
+            throw new HttpError(`El iva con el id:${id} está suspendido`, 409);
+        }
+        return supplier;
+    };
 }

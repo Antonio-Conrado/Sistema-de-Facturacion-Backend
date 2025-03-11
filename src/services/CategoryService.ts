@@ -58,4 +58,19 @@ export class CategoryService {
             data: { status: !category.status },
         });
     };
+
+    static isCategorySuspended = async (id: Categories['id']) => {
+        const category = await prisma.categories.findUnique({
+            where: { id },
+        });
+        if (!category) {
+            throw new HttpError('La categoría no existe', 404);
+        }
+        if (category && category.status === false) {
+            throw new HttpError(
+                'La categoría no está disponible. Intente con otra',
+                409,
+            );
+        }
+    };
 }

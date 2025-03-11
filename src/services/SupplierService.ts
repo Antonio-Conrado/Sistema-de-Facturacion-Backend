@@ -70,4 +70,15 @@ export class SupplierService {
             data: { status: !supplier.status },
         });
     };
+
+    static isSupplierSuspended = async (id: Suppliers['id']) => {
+        const supplier = await this.getSupplier(id);
+        if (supplier.status === false) {
+            throw new HttpError(
+                `El proveedor con el id:${id} está suspendido`,
+                409,
+            );
+        }
+        return supplier;
+    };
 }
