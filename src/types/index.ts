@@ -29,9 +29,60 @@ export type DetailsProducts = {
 };
 export type StoredProducts = {
     id?: number;
-    stock: number;
-    purchasePrice: number;
-    salePrice: number;
+    stock?: number;
+    purchasePrice?: number;
+    salePrice?: number;
     status?: boolean;
     detailsProducts: DetailsProducts;
+};
+
+//purchases
+export type Purchase = {
+    id: number;
+    usersId: number;
+    suppliersId: number;
+    ivaId: number;
+    invoiceNumber: number;
+    document: string | null;
+    date: Date;
+    subtotal: number;
+    discount: number | null;
+    total: number;
+    status: boolean;
+    detailsPurchases: DetailsPurchase[];
+};
+
+export type DetailsPurchase = {
+    id: number;
+    purchasesId: number;
+    storedProductsId: number;
+    amount: number;
+    purchasePrice: number;
+    salePrice: number;
+    discount: number | null;
+    subTotal: number;
+};
+
+export type Pagination = {
+    take?: number;
+    skip?: number;
+};
+
+export type OperationType = 'ADD' | 'SUBTRACT';
+
+export type updateStockType = {
+    storedProductsId: number;
+    amount: number;
+    purchasePrice?: number;
+    salePrice?: number;
+};
+
+export type calculateType = {
+    subtotal?: number;
+    discount?: number;
+    iva?: number;
+    amount?: number;
+    price?: number;
+    purchasePrice?: number;
+    salePrice?: number;
 };
