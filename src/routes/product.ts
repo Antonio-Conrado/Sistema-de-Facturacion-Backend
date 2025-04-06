@@ -4,7 +4,7 @@ import { ProductsController } from '../controllers/ProductsController';
 import { validateRole } from '../middlewares/validateRole';
 import { body, param } from 'express-validator';
 import { ErrorsValidation } from '../middlewares/ErrorsValidation';
-import { uploadImage } from '../middlewares/uploadFile';
+import { uploadFile } from '../middlewares/uploadFile';
 
 const router = Router();
 router.use(authenticate);
@@ -61,7 +61,7 @@ router.put(
 router.post(
     '/upload-image/:id',
     validateRole(['administrador', 'empleado']),
-    uploadImage,
+    uploadFile,
     ProductsController.uploadImageProduct,
 );
 
