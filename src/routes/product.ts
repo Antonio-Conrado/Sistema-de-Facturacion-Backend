@@ -4,7 +4,7 @@ import { ProductsController } from '../controllers/ProductsController';
 import { validateRole } from '../middlewares/validateRole';
 import { body, param } from 'express-validator';
 import { ErrorsValidation } from '../middlewares/ErrorsValidation';
-import { uploadImage } from '../middlewares/uploadImage';
+import { uploadImage } from '../middlewares/uploadFile';
 
 const router = Router();
 router.use(authenticate);

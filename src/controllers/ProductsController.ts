@@ -61,7 +61,7 @@ export class ProductsController {
 
     static uploadImageProduct = async (req: Request, res: Response) => {
         const { id } = req.params;
-        const { image } = req;
+        const { file: image } = req;
         try {
             await ProductService.uploadImageProduct(+id, image);
             res.status(200).json('Imagen súbida correctamente');

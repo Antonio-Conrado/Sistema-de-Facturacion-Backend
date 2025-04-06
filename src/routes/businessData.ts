@@ -4,7 +4,7 @@ import { ErrorsValidation } from '../middlewares/ErrorsValidation';
 import { body, param, query } from 'express-validator';
 import { validateRole } from '../middlewares/validateRole';
 import { BusinessDataController } from '../controllers/BusinessDataController';
-import { uploadImage } from '../middlewares/uploadImage';
+import { uploadFile } from '../middlewares/uploadFile';
 
 const router = Router();
 
@@ -37,7 +37,7 @@ router.put(
 router.post(
     '/upload-image',
     validateRole(['administrador', 'empleado']),
-    uploadImage,
+    uploadFile,
     BusinessDataController.uploadImage,
 );
 export default router;

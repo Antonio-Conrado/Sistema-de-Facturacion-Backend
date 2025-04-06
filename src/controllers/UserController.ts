@@ -115,11 +115,12 @@ export class UserController {
     };
 
     static uploadImageUser = async (req: Request, res: Response) => {
+        const { file: image } = req;
         const id = parseInt(req.params.userId, 10);
         try {
             await prisma.users.update({
                 where: { id },
-                data: { image: req.image },
+                data: { image },
             });
             res.status(200).json('Imagen súbida correctamente');
         } catch (error) {

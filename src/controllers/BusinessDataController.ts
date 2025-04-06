@@ -25,7 +25,9 @@ export class BusinessDataController {
                     where: { id: existingRecord.id },
                     data: req.body,
                 });
-                res.status(200).json('Datos del negocio actualizados exitosamente');
+                res.status(200).json(
+                    'Datos del negocio actualizados exitosamente',
+                );
             } else {
                 await prisma.businessData.create({
                     data: req.body,
@@ -38,6 +40,7 @@ export class BusinessDataController {
     };
 
     static uploadImage = async (req: Request, res: Response) => {
+        const { file: image } = req;
         try {
             const businessData = await prisma.businessData.findFirst();
             if (!businessData) {
@@ -46,11 +49,11 @@ export class BusinessDataController {
                 });
                 return;
             }
-            const data = await prisma.businessData.update({
+            await prisma.businessData.update({
                 where: { id: businessData.id },
-                data: { image: req.image },
+                data: { image },
             });
-            res.status(200).json('Imagen súbida correctamente')
+            res.status(200).json('Imagen súbida correctamente');
         } catch (error) {
             res.status(500).json({ error: 'Hubo un error' });
         }

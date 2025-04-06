@@ -10,8 +10,7 @@ import {
     validateUserInputs,
 } from '../middlewares/userValidation';
 import { validateRole } from '../middlewares/validateRole';
-import { uploadImage } from '../middlewares/uploadImage';
-
+import { uploadFile } from '../middlewares/uploadFile';
 const router = Router();
 
 router.param('userId', validateUserId);
@@ -56,7 +55,7 @@ router.patch(
 router.post(
     '/upload-image/:userId',
     validateRole(['administrador', 'empleado']),
-    uploadImage,
+    uploadFile,
     UserController.uploadImageUser,
 );
 
