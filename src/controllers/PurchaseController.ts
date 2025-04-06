@@ -48,4 +48,29 @@ export class PurchaseController {
             catchErrors(res, error);
         }
     };
+
+    static uploadPurchaseInvoice = async (req: Request, res: Response) => {
+        const { id } = req.params;
+        const { file: document } = req;
+        try {
+            await PurchaseService.uploadPurchaseInvoice(+id, document);
+            res.status(200).json('Archivo subido correctamente');
+        } catch (error) {
+            catchErrors(res, error);
+        }
+    };
+
+    static filterPurchasesByTerm = async (req: Request, res: Response) => {
+        const { take, skip, ...term }: Pagination = req.query;
+        try {
+            const suppliers = await PurchaseService.getAllPurchases(
+                take,
+                skip,
+                term,
+            );
+            res.status(200).json(suppliers);
+        } catch (error) {
+            catchErrors(res, error);
+        }
+    };
 }

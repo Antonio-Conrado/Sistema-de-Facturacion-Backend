@@ -1,4 +1,4 @@
-import { prisma } from '../config/db';
+import { prisma } from './../config/db';
 import { Purchase, User } from '../types';
 import { SupplierService } from './SupplierService';
 import { IvaService } from './IvaService';
@@ -69,24 +69,30 @@ export class PurchaseService {
         });
     };
 
-    static getAllPurchases = async (take = 10, skip = 0) => {
-        const purchase = await prisma.purchases.findMany({
-            select: {
-                id: true,
-                users: { select: { name: true, surname: true } },
-                suppliers: { select: { name: true } },
-                iva: { select: { rate: true } },
-                invoiceNumber: true,
-                date: true,
-                total: true,
-                discount: true,
-                status: true,
-            },
-            orderBy: { invoiceNumber: 'asc' },
-            take,
-            skip,
-        });
-        return purchase;
+    static getAllPurchases = async <T>(take = 10, skip = 0, term?: T) => {
+        const query = term ? { where: term } : undefined;
+        const [purchases, total] = await Promise.all([
+            prisma.purchases.findMany({
+                select: {
+                    id: true,
+                    users: { select: { id: true, name: true, surname: true } },
+                    suppliers: { select: { id: true, name: true } },
+                    iva: { select: { rate: true } },
+                    invoiceNumber: true,
+                    document: true,
+                    date: true,
+                    total: true,
+                    discount: true,
+                    status: true,
+                },
+                orderBy: { invoiceNumber: 'asc' },
+                take,
+                skip,
+                ...query,
+            }),
+            prisma.purchases.count({ ...query }),
+        ]);
+        return { purchases, total };
     };
 
     static getPurchase = async (id: Purchase['id']) => {
@@ -136,6 +142,17 @@ export class PurchaseService {
         return await prisma.purchases.update({
             where: { id },
             data: { status: false },
+        });
+    };
+
+    static uploadPurchaseInvoice = async (
+        id: Purchase['id'],
+        document: Purchase['document'],
+    ) => {
+        await this.getPurchase(id);
+        await prisma.purchases.update({
+            where: { id },
+            data: { document },
         });
     };
 }
