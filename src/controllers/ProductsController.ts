@@ -69,4 +69,18 @@ export class ProductsController {
             catchErrors(res, error);
         }
     };
+
+    static filterProductByTerm = async (req: Request, res: Response) => {
+        const query = req.query as { [key: string]: string };
+        const queryFormat = Object.entries(query)[0];
+        const term = { [queryFormat[0]]: queryFormat[1] };
+
+        try {
+            const results = await ProductService.filterProductByTerm(term);
+            res.status(200).json(results);
+        } catch (error) {
+            catchErrors(res, error);
+            console.log(error);
+        }
+    };
 }
