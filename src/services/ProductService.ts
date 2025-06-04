@@ -182,7 +182,7 @@ export class ProductService {
         }
     };
 
-    static updateStock = async (
+    static updateStockAndPrices = async (
         value: updateStockType[],
         operationType: OperationType,
     ) => {
@@ -193,7 +193,12 @@ export class ProductService {
                     in: value.map((item) => item.storedProductsId),
                 },
             },
-            select: { id: true, stock: true },
+            select: {
+                id: true,
+                stock: true,
+                purchasePrice: true,
+                salePrice: true,
+            },
         });
 
         // Update the stock for the ids obtained in the storedProducts variable
@@ -212,15 +217,34 @@ export class ProductService {
             if (newStock < 0) {
                 throw new HttpError(
                     `Stock insuficiente para el producto con ID ${item.storedProductsId}`,
-                    409,
+                    400,
+                );
+            }
+            if (item.purchasePrice <= 0 && item.salePrice <= 0) {
+                throw new HttpError(
+                    `Precios no válido. Debe ser superior a la cantidad de 0 ${item.storedProductsId}`,
+                    400,
                 );
             }
 
             // Update the stock with the new quantity
             await prisma.storedProducts.update({
                 where: { id: item.storedProductsId },
-                data: { stock: newStock },
+                data: {
+                    stock: newStock,
+                    purchasePrice: item.purchasePrice,
+                    salePrice: item.salePrice,
+                },
             });
         }
+    };
+
+    static filterProductByTerm = async (query: { [key: string]: string }) => {
+        console.log(query);
+        const results = await prisma.products.findMany({
+            include: { detailsProducts: { include: { storedProducts: true } } },
+            where: query,
+        });
+        return results;
     };
 }
