@@ -104,7 +104,7 @@ export const ivaValidation = async (
     res: Response,
     next: NextFunction,
 ) => {
-    await body('ivaId')
+    await body('iva')
         .toInt()
         .isInt({ min: 1 })
         .withMessage('El campo Iva es obligatorio y debe ser un número entero')
