@@ -107,21 +107,12 @@ model StoredProducts {
   detailsPurchases  DetailsPurchases[]
 }
 
-//iva
-model Iva {
-  id        Int         @id @default(autoincrement())
-  rate      Int         @unique
-  status    Boolean     @default(true)
-  purchases Purchases[]
-  sales     Sales[]
-}
-
 //purchases
 model Purchases {
   id               Int                @id @default(autoincrement())
   usersId          Int
   suppliersId      Int
-  ivaId            Int
+  iva              Int
   invoiceNumber    Int                @unique
   document         String?
   date             DateTime           @default(now())
@@ -131,7 +122,6 @@ model Purchases {
   status           Boolean            @default(true)
   users            Users              @relation(fields: [usersId], references: [id])
   suppliers        Suppliers          @relation(fields: [suppliersId], references: [id])
-  iva              Iva                @relation(fields: [ivaId], references: [id])
   detailsPurchases DetailsPurchases[]
 }
 
@@ -153,7 +143,7 @@ model Sales {
   id                   Int            @id @default(autoincrement())
   usersId              Int
   paymentMethodId      Int
-  ivaId                Int
+  iva                  Int
   transactionReference String?
   ruc                  String
   cancellationReason   String?
@@ -166,7 +156,6 @@ model Sales {
   status               Boolean        @default(true)
   users                Users          @relation(fields: [usersId], references: [id])
   paymentMethods       PaymentMethods @relation(fields: [paymentMethodId], references: [id])
-  iva                  Iva            @relation(fields: [ivaId], references: [id])
   detailsSales         DetailsSales[]
 }
 
