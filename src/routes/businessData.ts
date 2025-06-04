@@ -5,6 +5,7 @@ import { body, param, query } from 'express-validator';
 import { validateRole } from '../middlewares/validateRole';
 import { BusinessDataController } from '../controllers/BusinessDataController';
 import { uploadFile } from '../middlewares/uploadFile';
+import { Role } from '../types';
 
 const router = Router();
 
@@ -12,13 +13,13 @@ router.use(authenticate);
 
 router.get(
     '/',
-    validateRole(['administrador', 'empleado']),
+    validateRole([Role.admin, Role.employee]),
     BusinessDataController.getBusinessData,
 );
 
 router.put(
     '/',
-    validateRole(['administrador']),
+    validateRole([Role.admin]),
     body('ruc').notEmpty().withMessage('El ruc del negocio es obligatorio'),
     body('name').notEmpty().withMessage('El nombre del negocio es obligatorio'),
     body('direction')
@@ -36,7 +37,7 @@ router.put(
 
 router.post(
     '/upload-image',
-    validateRole(['administrador', 'empleado']),
+    validateRole([Role.admin, Role.employee]),
     uploadFile,
     BusinessDataController.uploadImage,
 );

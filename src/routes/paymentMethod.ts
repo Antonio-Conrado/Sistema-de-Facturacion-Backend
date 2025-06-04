@@ -4,6 +4,7 @@ import { ErrorsValidation } from '../middlewares/ErrorsValidation';
 import { body, param } from 'express-validator';
 import { validateRole } from '../middlewares/validateRole';
 import { PaymentMethodController } from '../controllers/PaymentMethodController';
+import { Role } from '../types';
 
 const router = Router();
 
@@ -11,7 +12,7 @@ router.use(authenticate);
 
 router.post(
     '/',
-    validateRole(['administrador']),
+    validateRole([Role.admin]),
     body('name').notEmpty().withMessage('El método de pago es obligatorio'),
     ErrorsValidation,
     PaymentMethodController.createPaymentMethod,
@@ -19,12 +20,12 @@ router.post(
 
 router.get(
     '/',
-    validateRole(['administrador', 'empleado']),
+    validateRole([Role.admin, Role.employee]),
     PaymentMethodController.getAllPaymentMethods,
 );
 router.get(
     '/:id',
-    validateRole(['administrador', 'empleado']),
+    validateRole([Role.admin, Role.employee]),
     param('id')
         .custom((value) => value > 0)
         .withMessage('El id del método de pago no es válido'),
@@ -34,7 +35,7 @@ router.get(
 
 router.put(
     '/:id',
-    validateRole(['administrador']),
+    validateRole([Role.admin]),
     param('id')
         .custom((value) => value > 0)
         .withMessage('El id del método de pago no es válido'),
@@ -45,7 +46,7 @@ router.put(
 
 router.patch(
     '/:id',
-    validateRole(['administrador']),
+    validateRole([Role.admin]),
     param('id')
         .custom((value) => value > 0)
         .withMessage('El id del método de pago no es válido'),

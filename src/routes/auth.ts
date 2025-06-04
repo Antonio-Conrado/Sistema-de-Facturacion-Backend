@@ -9,6 +9,7 @@ import {
     validateUserExists,
     validateUserId,
 } from '../middlewares/userValidation';
+import { Role } from '../types';
 
 const router = Router();
 
@@ -74,7 +75,7 @@ router.get('/user', authenticate, AuthController.user);
 router.put(
     '/update-password/:userId',
     authenticate,
-    validateRole(['administrador', 'empleado']),
+    validateRole([Role.admin, Role.employee]),
     body('password')
         .notEmpty()
         .withMessage('El password actual es obligatorio'),
@@ -90,7 +91,7 @@ router.put(
 router.post(
     '/check-password/:userId',
     authenticate,
-    validateRole(['administrador', 'empleado']),
+    validateRole([Role.admin, Role.employee]),
     body('password')
         .notEmpty()
         .withMessage('El password actual es obligatorio'),

@@ -11,13 +11,14 @@ import { authenticate } from '../middlewares/authenticate';
 import { validateRole } from '../middlewares/validateRole';
 import { uploadFile } from '../middlewares/uploadFile';
 import { validatePaginationQuery } from '../middlewares/pagination';
+import { Role } from '../types';
 
 const router = Router();
 router.use(authenticate);
 
 router.get(
     '/',
-    validateRole(['administrador', 'empleado']),
+    validateRole([Role.admin, Role.employee]),
     validatePaginationQuery,
     ErrorsValidation,
     PurchaseController.getAllPurchases,
@@ -25,13 +26,13 @@ router.get(
 
 router.get(
     '/:id',
-    validateRole(['administrador', 'empleado']),
+    validateRole([Role.admin, Role.employee]),
     PurchaseController.getPurchase,
 );
 
 router.post(
     '/',
-    validateRole(['administrador', 'empleado']),
+    validateRole([Role.admin, Role.employee]),
     purchaseValidation,
     discountValidation,
     ivaValidation,
@@ -40,13 +41,13 @@ router.post(
 );
 router.patch(
     '/:id',
-    validateRole(['administrador']),
+    validateRole([Role.admin]),
     PurchaseController.suspendPurchase,
 );
 
 router.patch(
     '/upload-document/:id',
-    validateRole(['administrador', 'empleado']),
+    validateRole([Role.admin, Role.employee]),
     uploadFile,
     PurchaseController.uploadPurchaseInvoice,
 );
@@ -54,7 +55,7 @@ router.patch(
 // The structure should be as follows. Example: api/purchases/suppliers/filter/term?suppliersId=1&take=10&skip=0
 router.get(
     '/filter/term',
-    validateRole(['administrador', 'empleado']),
+    validateRole([Role.admin, Role.employee]),
     query().custom((value, { req }) => {
         const { suppliersId, usersId, invoiceNumber } = req.query;
         if (!suppliersId && !usersId && !invoiceNumber) {

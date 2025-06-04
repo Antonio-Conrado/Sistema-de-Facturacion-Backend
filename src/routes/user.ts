@@ -11,6 +11,7 @@ import {
 } from '../middlewares/userValidation';
 import { validateRole } from '../middlewares/validateRole';
 import { uploadFile } from '../middlewares/uploadFile';
+import { Role } from '../types';
 const router = Router();
 
 router.param('userId', validateUserId);
@@ -19,7 +20,7 @@ router.use(authenticate);
 
 router.post(
     '/create-user',
-    validateRole(['administrador']),
+    validateRole([Role.admin]),
     validateUserInputs,
     validateUserInputPassword,
     ErrorsValidation,
@@ -28,19 +29,19 @@ router.post(
 
 router.get(
     '/get-all-users',
-    validateRole(['administrador']),
+    validateRole([Role.admin]),
     UserController.getAllUsers,
 );
 
 router.get(
     '/get-user/:userId',
-    validateRole(['administrador', 'empleado']),
+    validateRole([Role.admin, Role.employee]),
     UserController.getUser,
 );
 
 router.put(
     '/update-user/:userId',
-    validateRole(['administrador', 'empleado']),
+    validateRole([Role.admin, Role.employee]),
     validateUserInputs,
     ErrorsValidation,
     UserController.updateUser,
@@ -48,13 +49,13 @@ router.put(
 
 router.patch(
     '/suspended-user/:userId',
-    validateRole(['administrador']),
+    validateRole([Role.admin]),
     UserController.suspendUser,
 );
 
 router.post(
     '/upload-image/:userId',
-    validateRole(['administrador', 'empleado']),
+    validateRole([Role.admin, Role.employee]),
     uploadFile,
     UserController.uploadImageUser,
 );
