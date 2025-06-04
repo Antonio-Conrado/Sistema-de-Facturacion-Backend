@@ -1,7 +1,6 @@
 import { prisma } from './../config/db';
 import { Purchase, User } from '../types';
 import { SupplierService } from './SupplierService';
-import { IvaService } from './IvaService';
 import { HttpError } from '../config/HttpError';
 import {
     calculateDetailSubtotal,
@@ -11,16 +10,15 @@ import { ProductService } from './ProductService';
 
 export class PurchaseService {
     static createProduct = async (purchase: Purchase, userId: User['id']) => {
-        // Check if the supplier, IVA and products exist and status is true
+        // Check if the suppliers and products exist and status is true
         await ProductService.checkProductsExistsById(purchase.detailsPurchases); //Validate that each product exists in detailsPurchases.
 
         await SupplierService.isSupplierSuspended(+purchase.suppliersId);
-        const iva = await IvaService.isIvaSuspended(+purchase.ivaId);
 
         // Evaluate the total of the purchase transactions
         const evaluatedTotal = calculateTotalFromDetails(
             purchase.detailsPurchases,
-            iva,
+            purchase.iva === 15 ? purchase.iva : 0,
             purchase.discount,
         );
 
@@ -34,16 +32,16 @@ export class PurchaseService {
 
         //Insert the data into the database table
         return await prisma.$transaction(async (prisma) => {
-            await ProductService.updateStock(
+            await ProductService.updateStockAndPrices(
                 purchase.detailsPurchases,
-                'SUBTRACT',
+                'ADD',
             );
 
             return await prisma.purchases.create({
                 data: {
                     usersId: userId,
                     suppliersId: purchase.suppliersId,
-                    ivaId: purchase.ivaId,
+                    iva: purchase.iva,
                     invoiceNumber: invoiceNumber + 1,
                     document: purchase.document,
                     date: purchase.date,
@@ -77,7 +75,7 @@ export class PurchaseService {
                     id: true,
                     users: { select: { id: true, name: true, surname: true } },
                     suppliers: { select: { id: true, name: true } },
-                    iva: { select: { rate: true } },
+                    iva: true,
                     invoiceNumber: true,
                     document: true,
                     date: true,
@@ -98,10 +96,10 @@ export class PurchaseService {
     static getPurchase = async (id: Purchase['id']) => {
         const purchase = await prisma.purchases.findUnique({
             where: { id },
-            include: {
+            select: {
                 users: { select: { name: true, surname: true } },
                 suppliers: { select: { name: true } },
-                iva: { select: { rate: true } },
+                iva: true,
                 detailsPurchases: {
                     select: {
                         id: true,
