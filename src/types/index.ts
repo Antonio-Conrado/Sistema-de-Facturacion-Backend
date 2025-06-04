@@ -41,7 +41,7 @@ export type Purchase = {
     id: number;
     usersId: number;
     suppliersId: number;
-    ivaId: number;
+    iva: 0 | 15;
     invoiceNumber: number;
     document: string | null;
     date: Date;
@@ -86,3 +86,8 @@ export type calculateType = {
     purchasePrice?: number;
     salePrice?: number;
 };
+
+export enum Role {
+    admin = 'administrador',
+    employee = 'empleado',
+}
