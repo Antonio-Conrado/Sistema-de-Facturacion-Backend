@@ -1,6 +1,7 @@
 import * as bcrypt from 'bcrypt';
+import { Role } from '../types';
 export const seed = {
-    roles: [{ name: 'adminstrador' }, { name: 'empleado' }],
+    roles: [{ name: Role.admin }, { name: Role.employee }],
     users: [
         {
             name: 'John',
