@@ -7,7 +7,7 @@ export const calculateDetailSubtotal = ({
     discount,
 }: calculateType) => {
     const subtotalItem = price * amount;
-    const discountItem = discount ? (subtotalItem * discount) / 100 : 0;
+    const discountItem = discount ? subtotalItem * (discount / 100) : 0;
     const subtotalValue = subtotalItem - discountItem;
     return {
         subtotalValue,
@@ -16,14 +16,13 @@ export const calculateDetailSubtotal = ({
 
 // This function calculates the total of a purchase or sale, considering the subtotal, discount and iva.
 export const calculateTotal = ({ subtotal, discount, iva }: calculateType) => {
-    const subtotalValue = discount
-        ? subtotal - (subtotal * discount) / 100
-        : subtotal;
-    const ivaValue = iva ? (subtotalValue * iva) / 100 : 0;
+    const discountTotal = subtotal * (discount / 100);
+    const subtotalWithDiscount = subtotal - discountTotal;
+    const ivaTotal = subtotalWithDiscount * (iva / 100);
 
-    const totalValue = subtotalValue + ivaValue;
+    const totalValue = subtotalWithDiscount + ivaTotal;
     return {
-        subtotalValue,
+        subtotal,
         totalValue,
     };
 };
@@ -45,7 +44,7 @@ export const calculateTotalFromDetails = (
             }).subtotalValue,
         0,
     );
-
+    console.log(subtotalDetailsGeneral, discount, iva, 'a');
     // Calculate the total using the subtotalDetailsGeneral for the final total calculation.
     const calculatedTotal = calculateTotal({
         subtotal: subtotalDetailsGeneral,
