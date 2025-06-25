@@ -9,7 +9,20 @@ import {
 import { ProductService } from './ProductService';
 
 export class PurchaseService {
-    static createProduct = async (purchase: Purchase, userId: User['id']) => {
+    static createPurchase = async (purchase: Purchase, userId: User['id']) => {
+        const isPurchaseExists = await prisma.purchases.findFirst({
+            where: {
+                invoiceNumber: purchase.invoiceNumber,
+                suppliersId: purchase.suppliersId,
+            },
+        });
+        if (isPurchaseExists) {
+            throw new HttpError(
+                `La compra con la factura: ${purchase.invoiceNumber} ya existe para el proveedor seleccionado`,
+                404,
+            );
+        }
+
         // Check if the suppliers and products exist and status is true
         await ProductService.checkProductsExistsById(purchase.detailsPurchases); //Validate that each product exists in detailsPurchases.
 
@@ -21,14 +34,6 @@ export class PurchaseService {
             purchase.iva === 15 ? purchase.iva : 0,
             purchase.discount,
         );
-
-        // Get the last invoice number
-        const lastPurchase = await prisma.purchases.findFirst({
-            select: { invoiceNumber: true },
-            orderBy: { invoiceNumber: 'desc' },
-        });
-
-        const invoiceNumber = lastPurchase?.invoiceNumber ?? 0;
 
         //Insert the data into the database table
         return await prisma.$transaction(async (prisma) => {
@@ -42,10 +47,10 @@ export class PurchaseService {
                     usersId: userId,
                     suppliersId: purchase.suppliersId,
                     iva: purchase.iva,
-                    invoiceNumber: invoiceNumber + 1,
+                    invoiceNumber: purchase.invoiceNumber,
                     document: purchase.document,
                     date: purchase.date,
-                    subtotal: evaluatedTotal.subtotalValue,
+                    subtotal: evaluatedTotal.subtotal,
                     discount: purchase.discount,
                     total: evaluatedTotal.totalValue,
                     detailsPurchases: {
@@ -83,7 +88,7 @@ export class PurchaseService {
                     discount: true,
                     status: true,
                 },
-                orderBy: { invoiceNumber: 'asc' },
+                orderBy: { id: 'desc' },
                 take,
                 skip,
                 ...query,
@@ -97,9 +102,17 @@ export class PurchaseService {
         const purchase = await prisma.purchases.findUnique({
             where: { id },
             select: {
+                id: true,
+                date: true,
+                invoiceNumber: true,
+                document: true,
+                iva: true,
+                discount: true,
+                subtotal: true,
+                total: true,
+                status: true,
                 users: { select: { name: true, surname: true } },
                 suppliers: { select: { name: true } },
-                iva: true,
                 detailsPurchases: {
                     select: {
                         id: true,
