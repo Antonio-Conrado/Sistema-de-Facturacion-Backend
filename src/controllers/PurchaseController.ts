@@ -28,7 +28,10 @@ export class PurchaseController {
         const data: Purchase = req.body;
         const userId = req.user.id;
         try {
-            const purchase = await PurchaseService.createProduct(data, +userId);
+            const purchase = await PurchaseService.createPurchase(
+                data,
+                +userId,
+            );
             res.status(201).json(
                 `La compra con el número de factura: ${purchase.invoiceNumber} se ha registrado exitosamente`,
             );
@@ -56,6 +59,7 @@ export class PurchaseController {
             await PurchaseService.uploadPurchaseInvoice(+id, document);
             res.status(200).json('Archivo subido correctamente');
         } catch (error) {
+            console.log(error);
             catchErrors(res, error);
         }
     };
