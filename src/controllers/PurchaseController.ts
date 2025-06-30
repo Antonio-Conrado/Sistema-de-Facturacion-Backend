@@ -32,9 +32,10 @@ export class PurchaseController {
                 data,
                 +userId,
             );
-            res.status(201).json(
-                `La compra con el número de factura: ${purchase.invoiceNumber} se ha registrado exitosamente`,
-            );
+            res.status(201).json({
+                msg: `La compra con el número de factura: ${purchase.invoiceNumber} se ha registrado exitosamente`,
+                purchaseId: purchase.id,
+            });
         } catch (error) {
             catchErrors(res, error);
         }
