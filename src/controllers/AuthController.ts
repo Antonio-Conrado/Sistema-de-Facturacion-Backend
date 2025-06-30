@@ -3,7 +3,7 @@ import { prisma } from '../config/db';
 import { checkPassword, hashPassword } from '../utils/auth';
 import { generateJWT } from '../utils/generateJWT';
 import { generateToken } from '../utils/token';
-import { User } from '../types';
+import { Role, User } from '../types';
 import { AuthEmail } from '../emails/AuthEmail';
 
 export class AuthController {
@@ -60,6 +60,7 @@ export class AuthController {
         try {
             const user = await prisma.users.findUnique({
                 where: { email: req.body.email },
+                include: { roles: true },
             });
             if (!user || user.status === false) {
                 res.status(404).json({
@@ -80,6 +81,13 @@ export class AuthController {
             );
             if (!password) {
                 res.status(403).json({ error: 'El password es incorrecto' });
+                return;
+            }
+
+            if (!Object.values(Role).includes(user.roles.name as Role)) {
+                res.status(401).json({
+                    error: `El rol ${user.roles.name} no es válido. Solamente se acepta rol administrador o empleado`,
+                });
                 return;
             }
             const data = generateJWT({
