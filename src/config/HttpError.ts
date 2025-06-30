@@ -16,5 +16,7 @@ export const catchErrors = (res: Response, error) => {
     if (error.statusCode === 409) {
         return res.status(409).json({ error: error.message });
     }
-    res.status(500).json('Hubo un error. Intente nuevamente.');
+    res.status(500).json({
+        error: 'Ocurrió un error inesperado. Por favor, intente nuevamente. Si el problema persiste, busque ayuda o consulte con un responsable del sistema.',
+    });
 };
