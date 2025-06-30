@@ -113,7 +113,7 @@ model Purchases {
   usersId          Int
   suppliersId      Int
   iva              Int
-  invoiceNumber    Int                @unique
+  invoiceNumber    Int
   document         String?
   date             DateTime           @default(now())
   subtotal         Float
