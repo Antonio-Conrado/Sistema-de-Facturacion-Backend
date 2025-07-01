@@ -38,6 +38,23 @@ export class SeedController {
     };
 
     private static insertNewData = async () => {
+        // Recommended order to respect foreign key relationships
+        // const insertionOrder = [
+        //     'roles',
+        //     'users',
+        //     'suppliers',
+        //     'paymentMethods',
+        //     'businessData',
+        //     'categories',
+        //     'products',
+        //     'detailsProducts',
+        //     'storedProducts',
+        //     'purchases',
+        //     'detailsPurchases',
+        //     'sales',
+        //     'detailsSales',
+        // ];
+
         const models = Object.keys(prisma).filter(
             (key) =>
                 typeof prisma[key] === 'object' && 'findMany' in prisma[key],
@@ -45,7 +62,7 @@ export class SeedController {
 
         const modelsData = Object.keys(seed);
 
-        models.map(async (model) => {
+        for (const model of models) {
             if (modelsData.includes(model)) {
                 const records = seed[model];
                 for (const record of records) {
@@ -53,11 +70,12 @@ export class SeedController {
                         await prisma[model].create({
                             data: record,
                         });
+                        console.log(`Insertado registro en ${model}`);
                     } catch (error) {
                         console.error(`Error al insertar en ${model}:`, error);
                     }
                 }
             }
-        });
+        }
     };
 }
