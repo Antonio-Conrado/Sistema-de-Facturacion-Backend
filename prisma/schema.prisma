@@ -145,10 +145,10 @@ model Sales {
   paymentMethodId      Int
   iva                  Int
   transactionReference String?
-  ruc                  String
   cancellationReason   String?
   annulledAt           DateTime?
   invoiceNumber        Int            @unique
+  document             String?
   date                 DateTime       @default(now())
   subtotal             Float
   discount             Float          @default(0)
