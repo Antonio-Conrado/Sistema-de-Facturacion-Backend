@@ -19,7 +19,7 @@ export class PurchaseService {
         if (isPurchaseExists) {
             throw new HttpError(
                 `La compra con la factura: ${purchase.invoiceNumber} ya existe para el proveedor seleccionado`,
-                404,
+                400,
             );
         }
 
