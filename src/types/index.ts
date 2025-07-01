@@ -1,3 +1,5 @@
+import { Sales } from '@prisma/client';
+
 export type User = {
     id: number;
     roleId: number;
@@ -91,3 +93,36 @@ export enum Role {
     admin = 'administrador',
     employee = 'empleado',
 }
+
+// sales
+export type Sale = {
+    id: number;
+    usersId: number;
+    paymentMethodId: number;
+    iva: 0 | 15;
+    transactionReference: string | null;
+    cancellationReason: string | null;
+    annulledAt: Date | null;
+    invoiceNumber: number;
+    date: Date;
+    subtotal: number;
+    discount: number | null;
+    total: number;
+    status: boolean;
+    detailsSales: DetailsSale[];
+};
+
+export type DetailsSale = {
+    id: number;
+    salesId: number;
+    storedProductsId: number;
+    price: number;
+    amount: number;
+    subtotal: number;
+    discount: number | null;
+};
+
+export type SuspendSaleType = {
+    id: Sales['id'];
+    cancellationReason: Sales['cancellationReason'];
+};
