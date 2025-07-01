@@ -38,13 +38,13 @@ export const calculateTotalFromDetails = (
         (total, item) =>
             total +
             calculateDetailSubtotal({
-                price: item.purchasePrice,
+                price: item.purchasePrice ?? item.price,
                 amount: item.amount,
                 discount: item.discount,
             }).subtotalValue,
         0,
     );
-    console.log(subtotalDetailsGeneral, discount, iva, 'a');
+
     // Calculate the total using the subtotalDetailsGeneral for the final total calculation.
     const calculatedTotal = calculateTotal({
         subtotal: subtotalDetailsGeneral,
