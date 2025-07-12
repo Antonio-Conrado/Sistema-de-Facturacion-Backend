@@ -99,6 +99,7 @@ export type Sale = {
     id: number;
     usersId: number;
     paymentMethodId: number;
+    bankId?: number | null;
     iva: 0 | 15;
     transactionReference: string | null;
     cancellationReason: string | null;
