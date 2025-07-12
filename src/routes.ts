@@ -9,6 +9,7 @@ import product from './routes/product';
 import businessData from './routes/businessData';
 import paymentMethod from './routes/paymentMethod';
 import purchase from './routes/purchase';
+import sale from './routes/sale';
 
 const routes = (app: Express) => {
     app.use('/api/v1/seed', seed);
@@ -22,5 +23,6 @@ const routes = (app: Express) => {
     app.use('/api/v1/businessData', businessData);
     app.use('/api/v1/payment-methods', paymentMethod);
     app.use('/api/v1/purchases', purchase);
+    app.use('/api/v1/sales', sale);
 };
 export default routes;
