@@ -4,6 +4,7 @@ import auth from './routes/auth';
 import user from './routes/user';
 import category from './routes/category';
 import supplier from './routes/supplier';
+import bank from './routes/bank';
 import product from './routes/product';
 import businessData from './routes/businessData';
 import paymentMethod from './routes/paymentMethod';
@@ -16,6 +17,7 @@ const routes = (app: Express) => {
     app.use('/api/v1/user', user);
     app.use('/api/v1/categories', category);
     app.use('/api/v1/suppliers', supplier);
+    app.use('/api/v1/banks', bank);
     app.use('/api/v1/products', product);
     app.use('/api/v1/businessData', businessData);
     app.use('/api/v1/payment-methods', paymentMethod);
