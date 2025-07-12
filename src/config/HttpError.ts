@@ -10,6 +10,10 @@ export class HttpError extends Error {
 }
 
 export const catchErrors = (res: Response, error) => {
+    // console.log(error);
+    if (error.statusCode === 400) {
+        return res.status(400).json({ error: error.message });
+    }
     if (error.statusCode === 404) {
         return res.status(404).json({ error: error.message });
     }
