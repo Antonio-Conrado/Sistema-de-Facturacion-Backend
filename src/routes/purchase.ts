@@ -52,7 +52,7 @@ router.patch(
     PurchaseController.uploadPurchaseInvoice,
 );
 
-// The structure should be as follows. Example: api/purchases/suppliers/filter/term?suppliersId=1&take=10&skip=0
+// The structure should be as follows. Example: api/purchases/filter/term?suppliersId=1&take=10&skip=0
 router.get(
     '/filter/term',
     validateRole([Role.admin, Role.employee]),
