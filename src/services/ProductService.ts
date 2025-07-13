@@ -198,6 +198,15 @@ export class ProductService {
                 stock: true,
                 purchasePrice: true,
                 salePrice: true,
+                detailsProducts: {
+                    select: {
+                        products: {
+                            select: {
+                                code: true,
+                            },
+                        },
+                    },
+                },
             },
         });
 
@@ -216,13 +225,13 @@ export class ProductService {
             // If stock is insufficient, throw an error
             if (newStock < 0) {
                 throw new HttpError(
-                    `Stock insuficiente para el producto con ID ${item.storedProductsId}`,
+                    `Stock insuficiente para el producto con código "${storedProduct.detailsProducts.products.code}". Stock disponible: ${storedProduct.stock}.`,
                     400,
                 );
             }
             if (item.purchasePrice <= 0 && item.salePrice <= 0) {
                 throw new HttpError(
-                    `Precios no válido. Debe ser superior a la cantidad de 0 ${item.storedProductsId}`,
+                    `Precio inválido para el producto con código "${storedProduct.detailsProducts.products.code}". El precio de compra o de venta debe ser mayor a 0.`,
                     400,
                 );
             }
