@@ -17,13 +17,9 @@ export class SaleService {
         // await ProductService.checkProductsExistsById(sale.detailsSales); //
 
         // Check if the payment method is bank transfer and if the bank is suspended
-        if (sale.paymentMethodId === 2 && !sale.bankId) {
-            throw new HttpError(
-                'La venta no puede ser registrada porque el método de pago es Transferencia Bancaria pero no se ha proporcionado un banco.',
-                400,
-            );
+        if (sale.paymentMethodId === 2 && sale.bankId) {
+            await BankService.isBankSuspended(sale.bankId);
         }
-        await BankService.isBankSuspended(sale.bankId);
 
         // Evaluate the total of the purchase transactions
         const evaluatedTotal = calculateTotalFromDetails(
