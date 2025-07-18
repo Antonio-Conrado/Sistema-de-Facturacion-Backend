@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
 import { prisma } from '../config/db';
-import { seed } from '../data/seed';
+import { basicSeed, fullSeed } from '../data/seed';
 
 export class SeedController {
     static runSeed = async (req: Request, res: Response) => {
+        const { type } = req.params;
         if (process.argv[2] !== '--api') {
             res.status(500).json({
                 error: 'Solamente se puede ejecutar el seed en modo --api',
@@ -12,7 +13,7 @@ export class SeedController {
         }
         try {
             await this.deleteAllDataModels();
-            await this.insertNewData();
+            await this.insertNewData(type);
             res.send('Seed ejecutado correctamente');
         } catch (error) {
             res.json({
@@ -37,7 +38,7 @@ export class SeedController {
         );
     };
 
-    private static insertNewData = async () => {
+    private static insertNewData = async (type: string) => {
         // Recommended order to respect foreign key relationships
         // const insertionOrder = [
         //     'roles',
@@ -60,11 +61,21 @@ export class SeedController {
                 typeof prisma[key] === 'object' && 'findMany' in prisma[key],
         );
 
-        const modelsData = Object.keys(seed);
+        let typeSeed;
+
+        if (type === 'basicSeed') {
+            typeSeed = basicSeed; // basicSeed es el objeto con datos a insertar
+        } else if (type === 'fullSeed') {
+            typeSeed = fullSeed; // fullSeed es otro objeto con datos a insertar
+        } else {
+            throw new Error('Tipo de seed inválido');
+        }
+
+        const modelsData = Object.keys(typeSeed);
 
         for (const model of models) {
             if (modelsData.includes(model)) {
-                const records = seed[model];
+                const records = typeSeed[model];
                 for (const record of records) {
                     try {
                         await prisma[model].create({
