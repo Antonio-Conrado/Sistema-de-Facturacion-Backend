@@ -130,6 +130,8 @@ model Purchases {
   users            Users              @relation(fields: [usersId], references: [id])
   suppliers        Suppliers          @relation(fields: [suppliersId], references: [id])
   detailsPurchases DetailsPurchases[]
+
+  @@index([date])
 }
 
 model DetailsPurchases {
@@ -166,6 +168,8 @@ model Sales {
   paymentMethods       PaymentMethods @relation(fields: [paymentMethodId], references: [id])
   bank                 Banks?         @relation(fields: [bankId], references: [id])
   detailsSales         DetailsSales[]
+
+  @@index([date])
 }
 
 model DetailsSales {
