@@ -61,17 +61,13 @@ https://github.com/Antonio-Conrado/sistema-facturacion
     npm run dev
     ```
 
--   To run the API server for testing with Postman or Insomnia:
-
-    ```bash
-    npm run dev:api
-    ```
-
 8. Seed the database by calling the seed endpoint with a parameter indicating the seed type. Use `basicSeed` for essential system data, or `fullSeed` for comprehensive test data.
 
 Replace `{param}` with either `basicSeed` or `fullSeed`.
 
-Examples:
+You must also include a query parameter named `key`. Its value must match the `SEED_SECRET` environment variable in order to authorize the execution.
 
--   http://localhost:4000/api/v1/seed/basicSeed
--   http://localhost:4000/api/v1/seed/fullSeed
+**Examples:**
+
+-   `http://localhost:4000/api/v1/seed/basicSeed?key=seed`
+-   `http://localhost:4000/api/v1/seed/fullSeed?key=seed`
