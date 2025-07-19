@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/index.ts",
-    "dev:api": "nodemon src/index.ts --api"
+    "dev:api": "nodemon src/index.ts --api",
+    "start": "npx prisma migrate deploy && ts-node src/index.ts"
   },
   "author": "José Antonio Conrado López",
   "license": "ISC",
