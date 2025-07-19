@@ -89,6 +89,12 @@ export class UserController {
                 res.status(409).json({ error: 'Email no disponible' });
                 return;
             }
+            if (id === 1 && req.body.roleId !== 1) {
+                res.status(409).json({
+                    error: `El usuario ${req.body.name} ${req.body.surname} tiene el rol de administrador y no puede ser modificado.`,
+                });
+                return;
+            }
 
             await prisma.users.update({
                 where: { id },
@@ -96,6 +102,7 @@ export class UserController {
             });
             res.status(200).json('Usuario actualizado éxitosamente');
         } catch (error) {
+            console.log(error);
             res.status(500).json({ error: 'Hubo un error' });
         }
     };
