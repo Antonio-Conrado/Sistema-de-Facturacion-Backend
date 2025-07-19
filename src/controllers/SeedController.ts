@@ -5,9 +5,10 @@ import { basicSeed, fullSeed } from '../data/seed';
 export class SeedController {
     static runSeed = async (req: Request, res: Response) => {
         const { type } = req.params;
-        if (process.argv[2] !== '--api') {
-            res.status(500).json({
-                error: 'Solamente se puede ejecutar el seed en modo --api',
+        const { key } = req.query;
+        if (process.env.SEED_SECRET !== key) {
+            res.status(403).json({
+                error: 'Acceso no autorizado: clave inválida.',
             });
             return;
         }
