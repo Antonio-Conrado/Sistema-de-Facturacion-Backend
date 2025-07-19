@@ -71,3 +71,11 @@ You must also include a query parameter named `key`. Its value must match the `S
 
 -   `http://localhost:4000/api/v1/seed/basicSeed?key=seed`
 -   `http://localhost:4000/api/v1/seed/fullSeed?key=seed`
+
+## Deployment / Production
+
+To run the project in a production or deployment environment, use the following command:
+
+```bash
+npm run start
+```
