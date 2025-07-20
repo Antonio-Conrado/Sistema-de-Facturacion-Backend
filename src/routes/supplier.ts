@@ -17,8 +17,6 @@ router.post(
     body('name')
         .notEmpty()
         .withMessage('El nombre del proveedor es obligatorio'),
-    body('email')
-        .optional(),
     ErrorsValidation,
     SupplierController.createSupplier,
 );
