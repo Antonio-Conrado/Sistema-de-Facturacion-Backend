@@ -4,14 +4,12 @@ import { Suppliers } from '@prisma/client';
 
 export class SupplierService {
     static createSupplier = async (supplier: Suppliers) => {
-        const { ruc, name } = supplier;
+        const { ruc } = supplier;
         const rucExists = await prisma.suppliers.findUnique({
             where: { ruc },
         });
-        const nameExists = await prisma.suppliers.findUnique({
-            where: { name },
-        });
-        if (rucExists || nameExists) {
+       
+        if (rucExists ) {
             throw new HttpError('El proveedor ya existe', 409);
         }
         //verify email
