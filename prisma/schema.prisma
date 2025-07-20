@@ -58,7 +58,7 @@ model Categories {
 model Suppliers {
   id        Int         @id @default(autoincrement())
   ruc       String      @unique
-  name      String      @unique
+  name      String
   direction String?
   telephone String?
   email     String?     @unique
