@@ -169,7 +169,8 @@ export class SaleService {
         const sale = await prisma.sales.findFirst({
             orderBy: { invoiceNumber: 'desc' },
         });
-        if (!sale.invoiceNumber) {
+        
+        if (!sale) {
             return 1;
         }
         return sale.invoiceNumber + 1;
