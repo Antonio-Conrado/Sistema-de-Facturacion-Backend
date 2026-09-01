@@ -12,6 +12,7 @@ export class SeedController {
             });
             return;
         }
+        
         try {
             await this.deleteAllDataModels();
             await this.insertNewData(type);
