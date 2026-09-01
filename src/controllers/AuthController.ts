@@ -35,6 +35,7 @@ export class AuthController {
 
             res.status(201).json('Revisa tu correo para confirmar tu cuenta');
         } catch (error) {
+            console.log(error);
             res.status(500).json({ error: 'Hubo un error' });
         }
     };
@@ -70,7 +71,7 @@ export class AuthController {
             }
             if (user.isConfirm === false) {
                 res.status(404).json({
-                    error: 'El usuario no ha sído confirmado',
+                    error: 'El usuario aún ha confirmado mediante su correo electrónico',
                 });
                 return;
             }
@@ -111,7 +112,7 @@ export class AuthController {
             }
             if (!user.isConfirm) {
                 res.status(404).json({
-                    error: 'La cuenta no ha sído confirmada',
+                    error: 'La cuenta no ha sído confirmada. Por favor, revisa tu correo electrónico',
                 });
                 return;
             }
